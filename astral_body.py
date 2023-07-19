@@ -59,10 +59,11 @@ class AstralBody:
         pygame.draw.circle(screen, self.color, self.center, self.radius)
 
         pygame.draw.line(
-            line_screen,
-            (self.color[0] * 0.7, self.color[1] * 0.7, self.color[2] * 0.7),
-            self.old_center,
-            self.center,
+            surface=line_screen,
+            color=(self.color[0]*0.9, self.color[1]*0.9, self.color[2]*0.9),
+            start_pos=self.old_center,
+            end_pos=self.center,
+            width=max(2, int(self.radius**0.9))
         )
 
         if self.hovered:

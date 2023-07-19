@@ -37,13 +37,7 @@ while running:
         fade_surface.fill((0, 0, 0, 255))
 
     print(fade_alpha)
-
-    # Fill the fade_surface with semi-opaque black
     fade_surface.fill((0, 0, 0, fade_alpha))
-
-    # Clear the line_screen
-    # line_screen.fill("black")  # Fill with transparent white
-    # line_screen.fill((255, 255, 255, 25))  # Fill with transparent white
 
     # Draw a line
     pygame.draw.line(line_screen, (255, 0, 0), (0, 0), (WIDTH, HEIGHT))
@@ -66,7 +60,7 @@ while running:
     screen.blit(line_screen, (0, 0))
 
     # Update the display
-    pygame.display.flip()
+    pygame.display.update()
 
     clock.tick(FPS)
 

@@ -12,14 +12,19 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.line_screen = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
-        self.disappear_effect = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
-        self.disappear_effect.fill((0, 0, 0, 10), special_flags=pygame.BLEND_RGBA_SUB)
+
+        self.fade_effect = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+        self.fade_effect_alpha = 1
+        self.fade_effect.fill((0, 0, 0, self.fade_effect_alpha))
+
         self.running = True
         pygame.display.set_caption("Orbit")
         self.system_manager = SystemManager()
         self.setup()
         self.clock = pygame.time.Clock()
         self.dt = 0
+        self.speedup = False
+        self.disable_fade = False
 
     def setup(self):
         sun = AstralBody(
@@ -193,7 +198,7 @@ class Game:
             followed_body=sun,
             distance_to_followed_body=300,
             rotation=0,
-            rotation_speed=0.04,
+            rotation_speed=0.07,
             name="Pluto",
         )
 
@@ -211,15 +216,34 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_F1:
+                    self.system_manager.toggle_names()
+                if event.key == pygame.K_e:
+                    self.speedup = True
+                if event.key == pygame.K_d:
+                    self.disable_fade = not self.disable_fade
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_e:
+                    self.speedup = False
 
     def update(self):
-        self.system_manager.update(self.dt, pygame.mouse.get_pos())
+        if self.speedup:
+            self.dt = 16 / 1000  # 60 fps
+            for _ in range(10):
+                self.system_manager.update(self.dt, pygame.mouse.get_pos())
+                self.draw()  # needed to update the fade effect
+        else:
+            self.system_manager.update(self.dt, pygame.mouse.get_pos())
 
     def draw(self):
         self.screen.fill("black")
-        self.screen.blit(self.line_screen, (0, 0))
+
         self.system_manager.draw(self.screen, self.line_screen)
-        self.line_screen.blit(self.disappear_effect, (0, 0))
+
+        if not self.disable_fade:
+            # Blit the fade_effect onto the line_screen
+            self.line_screen.blit(self.fade_effect, (0, 0))
 
 
 if __name__ == "__main__":

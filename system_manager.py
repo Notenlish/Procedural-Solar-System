@@ -11,6 +11,8 @@ class SystemManager:
             body.check_mouse_collision(mouse_pos)
     
     def draw(self, screen, line_screen):
+        # Blit the line_screen onto the screen
+        screen.blit(line_screen, (0, 0))
         for body in self.astral_bodies:
             body.draw(screen, line_screen)
     
