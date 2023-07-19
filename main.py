@@ -3,43 +3,201 @@ import pygame
 from system_manager import SystemManager
 from astral_body import AstralBody
 
-WIDTH = 500
-HEIGHT = 500
+WIDTH = 600
+HEIGHT = 600
 
 
 class Game:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        self.line_screen = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+        self.disappear_effect = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
+        self.disappear_effect.fill((0, 0, 0, 10), special_flags=pygame.BLEND_RGBA_SUB)
         self.running = True
+        pygame.display.set_caption("Orbit")
         self.system_manager = SystemManager()
         self.setup()
         self.clock = pygame.time.Clock()
         self.dt = 0
 
     def setup(self):
-        system_center = AstralBody(
+        sun = AstralBody(
             center=(WIDTH / 2, HEIGHT / 2),
             radius=20,
-            color=(255, 255, 255),
+            color=(242, 192, 68),
             followed_body=None,
             distance_to_followed_body=0,
             rotation=0,
             rotation_speed=0,
+            name="Sun",
         )
-        system_center.update = lambda dt: None  # system center doesn't move
-        self.system_manager.add_astral_body(system_center)
+        sun.update = lambda dt: None  # system center doesn't move
+        self.system_manager.add_astral_body(sun)
 
         earth = AstralBody(
             center=(WIDTH / 2, HEIGHT / 2),
             radius=5,
             color=(102, 20, 255),
-            followed_body=system_center,
-            distance_to_followed_body=100,
+            followed_body=sun,
+            distance_to_followed_body=20,
             rotation=0,
             rotation_speed=0.5,
+            name="Earth",
         )
         self.system_manager.add_astral_body(earth)
+
+        moon = AstralBody(
+            center=(WIDTH / 2, HEIGHT / 2),
+            radius=2,
+            color=(73, 73, 73),
+            followed_body=earth,
+            distance_to_followed_body=10,
+            rotation=0,
+            rotation_speed=1,
+            name="Moon",
+        )
+        self.system_manager.add_astral_body(moon)
+
+        mars = AstralBody(
+            center=(WIDTH / 2, HEIGHT / 2),
+            radius=3,
+            color=(180, 144, 130),
+            followed_body=sun,
+            distance_to_followed_body=70,
+            rotation=0,
+            rotation_speed=0.3,
+            name="Mars",
+        )
+        self.system_manager.add_astral_body(mars)
+
+        phobos = AstralBody(
+            center=(WIDTH / 2, HEIGHT / 2),
+            radius=1,
+            color=(152, 71, 62),
+            followed_body=mars,
+            distance_to_followed_body=9,
+            rotation=0,
+            rotation_speed=1,
+            name="Phobos",
+        )
+        self.system_manager.add_astral_body(phobos)
+
+        deimos = AstralBody(
+            center=(WIDTH / 2, HEIGHT / 2),
+            radius=1,
+            color=(163, 124, 64),
+            followed_body=mars,
+            distance_to_followed_body=16,
+            rotation=0,
+            rotation_speed=0.5,
+            name="Deimos",
+        )
+        self.system_manager.add_astral_body(deimos)
+
+        jupiter = AstralBody(
+            center=(WIDTH / 2, HEIGHT / 2),
+            radius=10,
+            color="orange",
+            followed_body=sun,
+            distance_to_followed_body=120,
+            rotation=0,
+            rotation_speed=0.1,
+            name="Jupiter",
+        )
+
+        self.system_manager.add_astral_body(jupiter)
+
+        europa = AstralBody(
+            center=(WIDTH / 2, HEIGHT / 2),
+            radius=2,
+            color=(38, 42, 16),
+            followed_body=jupiter,
+            distance_to_followed_body=10,
+            rotation=0,
+            rotation_speed=1.47,
+            name="Europa",
+        )
+
+        self.system_manager.add_astral_body(europa)
+
+        ganymede = AstralBody(
+            center=(WIDTH / 2, HEIGHT / 2),
+            radius=2,
+            color=(84, 68, 43),
+            followed_body=jupiter,
+            distance_to_followed_body=20,
+            rotation=0,
+            rotation_speed=0.45,
+            name="Ganymede",
+        )
+
+        self.system_manager.add_astral_body(ganymede)
+
+        callisto = AstralBody(
+            center=(WIDTH / 2, HEIGHT / 2),
+            radius=2,
+            color=(255, 93, 115),
+            followed_body=jupiter,
+            distance_to_followed_body=30,
+            rotation=0,
+            rotation_speed=0.21,
+            name="Callisto",
+        )
+
+        self.system_manager.add_astral_body(callisto)
+
+        saturn = AstralBody(
+            center=(WIDTH / 2, HEIGHT / 2),
+            radius=8,
+            color=(247, 157, 132),
+            followed_body=sun,
+            distance_to_followed_body=150,
+            rotation=0,
+            rotation_speed=0.13,
+            name="Saturn",
+        )
+
+        self.system_manager.add_astral_body(saturn)
+
+        uranus = AstralBody(
+            center=(WIDTH / 2, HEIGHT / 2),
+            radius=6,
+            color=(0, 52, 89),
+            followed_body=sun,
+            distance_to_followed_body=200,
+            rotation=0,
+            rotation_speed=0.1,
+            name="Uranus",
+        )
+
+        self.system_manager.add_astral_body(uranus)
+
+        neptune = AstralBody(
+            center=(WIDTH / 2, HEIGHT / 2),
+            radius=6,
+            color=(0, 167, 225),
+            followed_body=sun,
+            distance_to_followed_body=250,
+            rotation=0,
+            rotation_speed=0.09,
+            name="Neptune",
+        )
+
+        self.system_manager.add_astral_body(neptune)
+
+        pluto = AstralBody(
+            center=(WIDTH / 2, HEIGHT / 2),
+            radius=2,
+            color=(227, 220, 194),
+            followed_body=sun,
+            distance_to_followed_body=300,
+            rotation=0,
+            rotation_speed=0.04,
+            name="Pluto",
+        )
+
+        self.system_manager.add_astral_body(pluto)
 
     def run(self):
         while self.running:
@@ -55,11 +213,13 @@ class Game:
                 self.running = False
 
     def update(self):
-        self.system_manager.update(self.dt)
+        self.system_manager.update(self.dt, pygame.mouse.get_pos())
 
     def draw(self):
         self.screen.fill("black")
-        self.system_manager.draw(self.screen)
+        self.screen.blit(self.line_screen, (0, 0))
+        self.system_manager.draw(self.screen, self.line_screen)
+        self.line_screen.blit(self.disappear_effect, (0, 0))
 
 
 if __name__ == "__main__":
