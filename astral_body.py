@@ -1,11 +1,16 @@
 import math
 from typing import Tuple
 import pygame
+from pygame._sdl2 import Renderer, Texture
+
+
+from ball3d import Ball3D
 
 
 class AstralBody:
     def __init__(
         self,
+        renderer: Renderer,
         center: Tuple[int, int] = (0, 0),
         radius: int = 0,
         color: tuple[int, int, int] = (0, 0, 0),
@@ -14,6 +19,7 @@ class AstralBody:
         rotation: float = 0,
         rotation_speed: float = 0,
         name: str = "",
+        texture_path: str = "planet.png",
     ) -> None:
         self.center = pygame.math.Vector2(center[0], center[1])
         self.radius = radius
@@ -28,6 +34,11 @@ class AstralBody:
         self.name = name
         self.old_center = self.center.copy()
         self.hovered = False
+        self.renderer = renderer
+        self.texture = Texture.from_surface(
+            self.renderer, pygame.image.load(texture_path)
+        )
+        self.ball = Ball3D(self.radius, self.texture, center=self.center)
 
     def update(self, dt):
         self.rotation += self.rotation_speed * dt  # increase rotation
@@ -55,7 +66,10 @@ class AstralBody:
         else:
             self.hovered = False
 
-    def draw(self, screen, line_screen):
+    def draw(self, dt):
+        self.ball.draw(dt)
+
+    def draw2(self, screen, line_screen):
         pygame.draw.circle(screen, self.color, self.center, self.radius)
 
         pygame.draw.line(

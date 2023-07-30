@@ -10,11 +10,15 @@ class SystemManager:
             body.update(dt)
             body.check_mouse_collision(mouse_pos)
     
-    def draw(self, screen, line_screen):
+    def draw2(self, screen, line_screen):
         # Blit the line_screen onto the screen
         screen.blit(line_screen, (0, 0))
         for body in self.astral_bodies:
             body.draw(screen, line_screen)
     
+    def draw(self, dt):
+        for body in self.astral_bodies:
+            body.draw(dt)
+
     def add_astral_body(self, body: AstralBody):
         self.astral_bodies.append(body)
